@@ -250,10 +250,11 @@ INSERT INTO `trinity_string` (`entry`, `content_default`) VALUES
 (5076, 'gameobjects');
 
 -- Add new NPC/Gameobject commands
-DELETE FROM `command` WHERE `name` IN ('npc spawngroup', 'npc despawngroup', 'gobject spawngroup', 'gobject despawngroup', 'list respawns');
+DELETE FROM `command` WHERE `name` IN ('npc spawngroup', 'npc despawngroup', 'gobject spawngroup', 'gobject despawngroup', 'list respawns', 'debug dynamicfactor');
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES
-('npc spawngroup', 842, 'Syntax: .npc spawngroup $groupId [ignorerespawn] [force]'),
-('npc despawngroup', 843, 'Syntax: .npc despawngroup $groupId [removerespawntime]'),
-('gobject spawngroup', 844, 'Syntax: .gobject spawngroup $groupId [ignorerespawn] [force]'),
-('gobject despawngroup', 845, 'Syntax: .gobject despawngroup $groupId [removerespawntime]'),
-('list respawns', 846, 'Syntax: .list respawns [*] [grid] (Enter * for all respawns within current map, or grid for all in current grid)');
+('npc spawngroup', 845, 'Syntax: .npc spawngroup $groupId [ignorerespawn] [force]'),
+('npc despawngroup', 846, 'Syntax: .npc despawngroup $groupId [removerespawntime]'),
+('gobject spawngroup', 847, 'Syntax: .gobject spawngroup $groupId [ignorerespawn] [force]'),
+('gobject despawngroup', 848, 'Syntax: .gobject despawngroup $groupId [removerespawntime]'),
+('list respawns', 849, 'Syntax: .list respawns [*] [grid] (Enter * for all respawns within current map, or grid for all in current grid)'),
+('debug dynamicfactor', 850, 'Syntax: .debug dynamicfactor [value]');
