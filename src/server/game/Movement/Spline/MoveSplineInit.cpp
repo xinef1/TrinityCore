@@ -112,6 +112,10 @@ namespace Movement
         if (!args.Validate(unit))
             return 0;
 
+        // increase by hover height
+        if (unit->IsHovering())
+            std::for_each(++args.path.begin(), args.path.end(), [hh = unit->GetHoverHeight()](G3D::Vector3& vec) { vec.z += hh; });
+
         unit->m_movementInfo.SetMovementFlags(moveFlags);
         move_spline.Initialize(args);
 

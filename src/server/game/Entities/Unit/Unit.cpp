@@ -497,16 +497,11 @@ void Unit::UpdateSplineMovement(uint32 t_diff)
     if (arrived)
         DisableSpline();
 
-    m_movesplineTimer.Update(t_diff);
-    if (m_movesplineTimer.Passed() || arrived)
-        UpdateSplinePosition();
+    UpdateSplinePosition();
 }
 
 void Unit::UpdateSplinePosition()
 {
-    static uint32 const positionUpdateDelay = 400;
-
-    m_movesplineTimer.Reset(positionUpdateDelay);
     Movement::Location loc = movespline->ComputePosition();
 
     if (movespline->onTransport)
@@ -523,6 +518,10 @@ void Unit::UpdateSplinePosition()
 
     if (HasUnitState(UNIT_STATE_CANNOT_TURN))
         loc.orientation = GetOrientation();
+
+    // loc z will be increased by hover height in PlayerRelocation, subtract it here
+    if (GetTypeId() == TYPEID_PLAYER && IsHovering())
+        loc.z -= GetHoverHeight();
 
     UpdatePosition(loc.x, loc.y, loc.z, loc.orientation);
 }
@@ -561,7 +560,7 @@ bool Unit::IsWithinMeleeRange(Unit const* obj) const
 
     float dx = GetPositionX() - obj->GetPositionX();
     float dy = GetPositionY() - obj->GetPositionY();
-    float dz = GetPositionZMinusOffset() - obj->GetPositionZMinusOffset();
+    float dz = GetPositionZ() - obj->GetPositionZ();
     float distsq = dx*dx + dy*dy + dz*dz;
 
     float maxdist = GetMeleeRange(obj);
@@ -9250,6 +9249,10 @@ void Unit::setDeathState(DeathState s)
             GetMotionMaster()->Clear(false);
             GetMotionMaster()->MoveIdle();
         }
+
+        // Remove Hover so the corpse can fall to the ground
+        SetHover(false);
+
         StopMoving();
         DisableSpline();
         // without this when removing IncreaseMaxHealth aura player may stuck with 1 hp
@@ -13429,7 +13432,7 @@ void Unit::BuildMovementPacket(ByteBuffer *data) const
     *data << uint32(getMSTime());                       // time / counter
     *data << GetPositionX();
     *data << GetPositionY();
-    *data << GetPositionZMinusOffset();
+    *data << GetPositionZ();
     *data << GetOrientation();
 
     // 0x00000200
@@ -13497,7 +13500,7 @@ void Unit::NearTeleportTo(Position const& pos, bool casting /*= false*/)
 
 void Unit::SendTeleportPacket(Position const& pos)
 {
-    Position oldPos = { GetPositionX(), GetPositionY(), GetPositionZMinusOffset(), GetOrientation() };
+    Position oldPos = { GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation() };
     if (GetTypeId() == TYPEID_UNIT)
         Relocate(&pos);
 

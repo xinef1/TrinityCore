@@ -56,8 +56,9 @@ PathGenerator::~PathGenerator()
 
 bool PathGenerator::CalculatePath(float destX, float destY, float destZ, bool forceDest, bool straightLine)
 {
-    float x, y, z;
-    _sourceUnit->GetPosition(x, y, z);
+    float x = _sourceUnit->GetPositionX();
+    float y = _sourceUnit->GetPositionY();
+    float z = _sourceUnit->GetPositionZMinusOffset();
 
     if (!Trinity::IsValidMapCoord(destX, destY, destZ) || !Trinity::IsValidMapCoord(x, y, z))
         return false;

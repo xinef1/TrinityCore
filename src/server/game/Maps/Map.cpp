@@ -970,8 +970,7 @@ void Map::PlayerRelocation(Player* player, float x, float y, float z, float orie
     //! If hovering, always increase our server-side Z position
     //! Client automatically projects correct position based on Z coord sent in monster move
     //! and UNIT_FIELD_HOVERHEIGHT sent in object updates
-    if (player->HasUnitMovementFlag(MOVEMENTFLAG_HOVER))
-        z += player->GetFloatValue(UNIT_FIELD_HOVERHEIGHT);
+    z += player->GetHoverHeight();
 
     player->Relocate(x, y, z, orientation);
     if (player->IsVehicle())
@@ -1005,8 +1004,9 @@ void Map::CreatureRelocation(Creature* creature, float x, float y, float z, floa
     //! If hovering, always increase our server-side Z position
     //! Client automatically projects correct position based on Z coord sent in monster move
     //! and UNIT_FIELD_HOVERHEIGHT sent in object updates
-    if (creature->HasUnitMovementFlag(MOVEMENTFLAG_HOVER))
-        z += creature->GetFloatValue(UNIT_FIELD_HOVERHEIGHT);
+    // Will be done in spline
+    //if (creature->HasUnitMovementFlag(MOVEMENTFLAG_HOVER))
+    //    z += creature->GetFloatValue(UNIT_FIELD_HOVERHEIGHT);
 
     // delay creature move for grid/cell to grid/cell moves
     if (old_cell.DiffCell(new_cell) || old_cell.DiffGrid(new_cell))
