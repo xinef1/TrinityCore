@@ -6724,6 +6724,7 @@ void ObjectMgr::LoadGameObjectTemplate()
 
         got.AIName = fields[32].GetString();
         got.ScriptId = GetScriptId(fields[33].GetString());
+        got.IsForQuests = false;
 
         // Checks
 
@@ -7809,8 +7810,6 @@ void ObjectMgr::LoadGameObjectForQuests()
 {
     uint32 oldMSTime = getMSTime();
 
-    _gameObjectForQuestStore.clear();                         // need for reload case
-
     if (sObjectMgr->GetGameObjectTemplates()->empty())
     {
         TC_LOG_INFO("server.loading", ">> Loaded 0 GameObjects for quests");
@@ -7820,13 +7819,14 @@ void ObjectMgr::LoadGameObjectForQuests()
     uint32 count = 0;
 
     // collect GO entries for GO that must activated
-    GameObjectTemplateContainer const* gotc = sObjectMgr->GetGameObjectTemplates();
-    for (GameObjectTemplateContainer::const_iterator itr = gotc->begin(); itr != gotc->end(); ++itr)
+    GameObjectTemplateContainer* gotc = const_cast<GameObjectTemplateContainer*>(sObjectMgr->GetGameObjectTemplates());
+    for (GameObjectTemplateContainer::iterator itr = gotc->begin(); itr != gotc->end(); ++itr)
     {
+        itr->second.IsForQuests = false;
         switch (itr->second.type)
         {
             case GAMEOBJECT_TYPE_QUESTGIVER:
-                _gameObjectForQuestStore.insert(itr->second.entry);
+                itr->second.IsForQuests = true;
                 ++count;
                 break;
             case GAMEOBJECT_TYPE_CHEST:
@@ -7837,7 +7837,7 @@ void ObjectMgr::LoadGameObjectForQuests()
                 // find quest loot for GO
                 if (itr->second.chest.questId || LootTemplates_Gameobject.HaveQuestLootFor(loot_id))
                 {
-                    _gameObjectForQuestStore.insert(itr->second.entry);
+                    itr->second.IsForQuests = true;
                     ++count;
                 }
                 break;
@@ -7846,7 +7846,7 @@ void ObjectMgr::LoadGameObjectForQuests()
             {
                 if (itr->second._generic.questID > 0)            //quests objects
                 {
-                    _gameObjectForQuestStore.insert(itr->second.entry);
+                    itr->second.IsForQuests = true;
                     ++count;
                 }
                 break;
@@ -7855,7 +7855,7 @@ void ObjectMgr::LoadGameObjectForQuests()
             {
                 if (itr->second.goober.questId > 0)              //quests objects
                 {
-                    _gameObjectForQuestStore.insert(itr->second.entry);
+                    itr->second.IsForQuests = true;
                     ++count;
                 }
                 break;

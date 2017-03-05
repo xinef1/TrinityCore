@@ -424,6 +424,7 @@ struct GameObjectTemplate
 
     std::string AIName;
     uint32 ScriptId;
+    bool IsForQuests;
     WorldPacket QueryData[TOTAL_LOCALES];
 
     // helpers
@@ -560,6 +561,11 @@ struct GameObjectTemplate
             case GAMEOBJECT_TYPE_GOOBER:      return goober.cooldown;
             default: return 0;
         }
+    }
+
+    bool IsGameObjectForQuests() const
+    {
+        return IsForQuests;
     }
 
     void InitializeQueryData();

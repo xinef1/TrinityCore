@@ -826,11 +826,6 @@ class TC_GAME_API ObjectMgr
             return _tavernAreaTriggerStore.find(Trigger_ID) != _tavernAreaTriggerStore.end();
         }
 
-        bool IsGameObjectForQuests(uint32 entry) const
-        {
-            return _gameObjectForQuestStore.find(entry) != _gameObjectForQuestStore.end();
-        }
-
         GossipText const* GetGossipText(uint32 Text_ID) const;
 
         WorldSafeLocsEntry const* GetDefaultGraveYard(uint32 team) const;
@@ -1364,11 +1359,9 @@ class TC_GAME_API ObjectMgr
         typedef std::unordered_map<uint32, GossipText> GossipTextContainer;
         typedef std::unordered_map<uint32, uint32> QuestAreaTriggerContainer;
         typedef std::set<uint32> TavernAreaTriggerContainer;
-        typedef std::set<uint32> GameObjectForQuestContainer;
 
         QuestAreaTriggerContainer _questAreaTriggerStore;
         TavernAreaTriggerContainer _tavernAreaTriggerStore;
-        GameObjectForQuestContainer _gameObjectForQuestStore;
         GossipTextContainer _gossipTextStore;
         AreaTriggerContainer _areaTriggerStore;
         AreaTriggerScriptContainer _areaTriggerScriptStore;

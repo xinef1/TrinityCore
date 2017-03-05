@@ -1109,7 +1109,7 @@ bool GameObject::ActivateToQuest(Player* target) const
     if (target->HasQuestForGO(GetEntry()))
         return true;
 
-    if (!sObjectMgr->IsGameObjectForQuests(GetEntry()))
+    if (!GetGOInfo()->IsGameObjectForQuests())
         return false;
 
     switch (GetGoType())
